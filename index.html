@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Catálogo Pensok Pilar</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --verde:   #00C48C;
+    --fondo:   #0F1117;
+    --sup:     #181C25;
+    --sup2:    #1E2330;
+    --borde:   #2A3045;
+    --texto:   #E8EAF0;
+    --sec:     #7A8099;
+    --rojo:    #FF4D6A;
+    --amarillo:#FFB800;
+    --azul:    #4D9EFF;
+  }
+
+  body {
+    background: var(--fondo);
+    color: var(--texto);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+  }
+
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: var(--sup); }
+  ::-webkit-scrollbar-thumb { background: var(--borde); border-radius: 3px; }
+
+  /* ── LOGIN ── */
+  #login-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .login-box {
+    background: var(--sup);
+    border: 1px solid var(--borde);
+    border-radius: 16px;
+    padding: 36px 32px;
+    width: 100%;
+    max-width: 360px;
+    animation: fadeIn .3s ease;
+  }
+  .login-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 28px;
+    justify-content: center;
+  }
+  .login-logo-icon {
+    width: 32px; height: 32px;
+    background: var(--verde);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700; color: #000;
+  }
+  .login-logo-text { font-size: 18px; font-weight: 600; letter-spacing: -0.3px; }
+  .login-sub { font-size: 12px; color: var(--sec); text-align: center; margin-bottom: 24px; }
+  .login-label { font-size: 11px; color: var(--sec); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 6px; }
+  .login-input {
+    width: 100%;
+    background: var(--sup2);
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+    padding: 10px 13px;
+    color: var(--texto);
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    transition: border-color .15s;
+    margin-bottom: 16px;
+  }
+  .login-input:focus { border-color: var(--verde); }
+  .login-btn {
+    width: 100%;
+    background: var(--verde);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    padding: 11px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: opacity .15s;
+    margin-top: 4px;
+  }
+  .login-btn:hover { opacity: .85; }
+  .login-error {
+    background: #FF4D6A18;
+    color: var(--rojo);
+    border: 1px solid #FF4D6A33;
+    border-radius: 8px;
+    padding: 9px 13px;
+    font-size: 13px;
+    margin-bottom: 14px;
+    display: none;
+  }
+
+  /* ── APP ── */
+  #app { display: none; }
+
+  .topbar {
+    background: var(--sup);
+    border-bottom: 1px solid var(--borde);
+    padding: 0 24px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .topbar-left { display: flex; align-items: center; gap: 10px; }
+  .topbar-icon {
+    width: 26px; height: 26px;
+    background: var(--verde);
+    border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: #000;
+  }
+  .topbar-title { font-size: 15px; font-weight: 600; letter-spacing: -0.3px; }
+  .topbar-sub { font-size: 12px; color: var(--sec); }
+  .topbar-right { display: flex; align-items: center; gap: 12px; }
+  .badge-count {
+    background: var(--verde);
+    color: #000;
+    border-radius: 20px;
+    padding: 2px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'DM Mono', monospace;
+  }
+  .btn-ghost {
+    background: transparent;
+    border: 1px solid var(--borde);
+    color: var(--sec);
+    border-radius: 7px;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .btn-ghost:hover { color: var(--texto); border-color: var(--sec); }
+
+  .main { padding: 24px; max-width: 1280px; margin: 0 auto; }
+
+  /* ── FILTROS ── */
+  .filtros {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .input-search {
+    background: var(--sup);
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+    padding: 8px 13px;
+    color: var(--texto);
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    width: 260px;
+    transition: border-color .15s;
+  }
+  .input-search:focus { border-color: var(--verde); }
+  .select-cat {
+    background: var(--sup);
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+    padding: 8px 13px;
+    color: var(--texto);
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    cursor: pointer;
+    min-width: 160px;
+  }
+  .toggle-inactivos {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    color: var(--sec);
+    cursor: pointer;
+    user-select: none;
+    margin-left: auto;
+  }
+  .toggle-inactivos input[type=checkbox] {
+    accent-color: var(--verde);
+    width: 14px; height: 14px;
+    cursor: pointer;
+  }
+  .resumen {
+    font-size: 11px;
+    color: var(--sec);
+    padding: 4px 0;
+    white-space: nowrap;
+  }
+
+  /* ── TABLA ── */
+  .tabla-wrap {
+    background: var(--sup);
+    border: 1px solid var(--borde);
+    border-radius: 12px;
+    overflow: auto;
+    animation: fadeIn .25s ease;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  thead th {
+    padding: 11px 16px;
+    text-align: left;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--sec);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    border-bottom: 1px solid var(--borde);
+    background: var(--sup);
+    position: sticky;
+    top: 0;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    transition: color .15s;
+  }
+  thead th:hover { color: var(--verde); }
+  thead th .sort-icon { margin-left: 4px; opacity: .5; font-size: 9px; }
+  thead th.activo { color: var(--verde); }
+  thead th.activo .sort-icon { opacity: 1; }
+
+  tbody tr {
+    border-bottom: 1px solid var(--borde);
+    transition: background .1s;
+  }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--sup2); }
+  tbody tr.inactivo { opacity: .45; }
+
+  td { padding: 10px 16px; vertical-align: middle; }
+
+  .td-codigo {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--sec);
+    white-space: nowrap;
+  }
+  .td-nombre { font-weight: 500; max-width: 320px; }
+  .td-nombre span { font-size: 11px; color: var(--sec); font-weight: 400; display: block; }
+  .td-precio {
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .td-stock { text-align: right; white-space: nowrap; }
+
+  .stock-badge {
+    display: inline-block;
+    border-radius: 5px;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'DM Mono', monospace;
+  }
+  .stock-ok    { background: #00C48C18; color: var(--verde); border: 1px solid #00C48C33; }
+  .stock-bajo  { background: #FFB80018; color: var(--amarillo); border: 1px solid #FFB80033; }
+  .stock-agotado { background: #FF4D6A18; color: var(--rojo); border: 1px solid #FF4D6A33; }
+
+  .cat-badge {
+    display: inline-block;
+    background: #4D9EFF12;
+    color: #7BC8FF;
+    border: 1px solid #4D9EFF25;
+    border-radius: 5px;
+    padding: 1px 7px;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+  .inactivo-badge {
+    display: inline-block;
+    background: #7A809918;
+    color: var(--sec);
+    border: 1px solid #7A809933;
+    border-radius: 5px;
+    padding: 1px 7px;
+    font-size: 10px;
+    margin-left: 5px;
+  }
+
+  /* ── EMPTY / LOADING ── */
+  .empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--sec);
+    font-size: 13px;
+  }
+  .spinner {
+    width: 22px; height: 22px;
+    border: 2px solid var(--borde);
+    border-top-color: var(--verde);
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+    margin: 0 auto 12px;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center;
+    padding: 24px;
+    font-size: 11px;
+    color: var(--sec);
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="login-logo-icon">P</div>
+      <span class="login-logo-text">Pensok</span>
+    </div>
+    <p class="login-sub">Catálogo de productos — Pilar</p>
+    <div id="login-error" class="login-error">Clave incorrecta. Intentá de nuevo.</div>
+    <label class="login-label" for="clave-input">Clave de acceso</label>
+    <input id="clave-input" class="login-input" type="password" placeholder="••••••••" autocomplete="off"/>
+    <button class="login-btn" onclick="verificarClave()">Ingresar</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-icon">P</div>
+      <span class="topbar-title">Pensok</span>
+      <span class="topbar-sub">Catálogo Pilar</span>
+    </div>
+    <div class="topbar-right">
+      <span class="badge-count" id="badge-count">0 productos</span>
+      <span id="ultima-act" style="font-size:11px;color:var(--sec)"></span>
+      <button class="btn-ghost" onclick="cargarProductos()">↺ Actualizar</button>
+      <button class="btn-ghost" onclick="cerrarSesion()">Salir</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="filtros">
+      <input id="busqueda" class="input-search" type="text" placeholder="Buscar por nombre o código..." oninput="filtrar()"/>
+      <select id="filtro-cat" class="select-cat" onchange="filtrar()">
+        <option value="">Todas las categorías</option>
+      </select>
+      <span class="resumen" id="resumen-text"></span>
+      <label class="toggle-inactivos">
+        <input type="checkbox" id="mostrar-inactivos" onchange="filtrar()" checked/>
+        Mostrar inactivos
+      </label>
+    </div>
+
+    <div class="tabla-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th onclick="ordenarPor('codigo')" id="th-codigo">Código <span class="sort-icon">↕</span></th>
+            <th onclick="ordenarPor('nombre')" id="th-nombre">Nombre <span class="sort-icon">↕</span></th>
+            <th onclick="ordenarPor('categoria')" id="th-categoria">Categoría <span class="sort-icon">↕</span></th>
+            <th onclick="ordenarPor('stock')" id="th-stock" style="text-align:right">Stock <span class="sort-icon">↕</span></th>
+            <th onclick="ordenarPor('precio_min')" id="th-precio_min" style="text-align:right">Precio minorista <span class="sort-icon">↕</span></th>
+          </tr>
+        </thead>
+        <tbody id="tabla-body">
+          <tr><td colspan="5" class="empty"><div class="spinner"></div>Cargando productos...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="footer">
+    Datos en tiempo real desde Pensok · Solo lectura · <span id="footer-count"></span>
+  </div>
+</div>
+
+<script>
+  // ── CONFIGURACIÓN ──────────────────────────────────────────────
+  const SUPABASE_URL  = "https://dupatnbwrgdtxalpqgqi.supabase.co";
+  const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR1cGF0bmJ3cmdkdHhhbHBxZ3FpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcwNDI3MTYsImV4cCI6MjA5MjYxODcxNn0.boipXsRYdS98KjU8A2edDbAMEprFGT_1iL6rwkbHres";
+
+  // ⚠️ CAMBIÁ ESTA CLAVE antes de compartir
+  const CLAVE_ACCESO = "pensok2025";
+
+  // ── AUTH ───────────────────────────────────────────────────────
+  function verificarClave(){
+    const val = document.getElementById("clave-input").value;
+    if(val === CLAVE_ACCESO){
+      sessionStorage.setItem("catalogo_auth","1");
+      document.getElementById("login-screen").style.display = "none";
+      document.getElementById("app").style.display = "block";
+      cargarProductos();
+    } else {
+      document.getElementById("login-error").style.display = "block";
+      document.getElementById("clave-input").value = "";
+      document.getElementById("clave-input").focus();
+    }
+  }
+  function cerrarSesion(){
+    sessionStorage.removeItem("catalogo_auth");
+    location.reload();
+  }
+  document.getElementById("clave-input").addEventListener("keydown", e => {
+    if(e.key === "Enter") verificarClave();
+  });
+  // Auto-login si ya estaba autenticado en esta sesión
+  if(sessionStorage.getItem("catalogo_auth")==="1"){
+    document.getElementById("login-screen").style.display = "none";
+    document.getElementById("app").style.display = "block";
+  }
+
+  // ── DATOS ──────────────────────────────────────────────────────
+  let todosLosProductos = [];
+  let campoOrden = "nombre";
+  let dirOrden   = "asc";
+
+  async function cargarProductos(){
+    document.getElementById("tabla-body").innerHTML =
+      `<tr><td colspan="5" class="empty"><div class="spinner"></div>Cargando productos...</td></tr>`;
+
+    try {
+      let todos = [];
+      let from = 0;
+      const PAGE = 1000;
+      while(true){
+        const res = await fetch(
+          `${SUPABASE_URL}/rest/v1/productos?select=codigo,nombre,categoria,marca,stock,stock_min,precio_min,activo&order=nombre.asc&limit=${PAGE}&offset=${from}`,
+          { headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` } }
+        );
+        if(!res.ok) throw new Error("Error al cargar datos");
+        const data = await res.json();
+        todos = todos.concat(data);
+        if(data.length < PAGE) break;
+        from += PAGE;
+      }
+      todosLosProductos = todos;
+
+      // Poblar categorías
+      const cats = [...new Set(todos.map(p=>p.categoria).filter(Boolean))].sort();
+      const sel = document.getElementById("filtro-cat");
+      sel.innerHTML = `<option value="">Todas las categorías (${cats.length})</option>`;
+      cats.forEach(c => {
+        const o = document.createElement("option");
+        o.value = c; o.textContent = c;
+        sel.appendChild(o);
+      });
+
+      // Timestamp
+      const now = new Date();
+      document.getElementById("ultima-act").textContent =
+        `Actualizado ${now.toLocaleTimeString("es-AR",{hour:"2-digit",minute:"2-digit"})}`;
+
+      filtrar();
+
+    } catch(e){
+      document.getElementById("tabla-body").innerHTML =
+        `<tr><td colspan="5" class="empty">Error al cargar los datos. Verificá tu conexión.</td></tr>`;
+    }
+  }
+
+  // ── FILTRAR Y RENDERIZAR ────────────────────────────────────────
+  function filtrar(){
+    const busq    = document.getElementById("busqueda").value.toLowerCase().trim();
+    const cat     = document.getElementById("filtro-cat").value;
+    const verInac = document.getElementById("mostrar-inactivos").checked;
+
+    let lista = todosLosProductos;
+
+    if(!verInac) lista = lista.filter(p => p.activo !== false);
+    if(cat)      lista = lista.filter(p => p.categoria === cat);
+    if(busq)     lista = lista.filter(p =>
+      (p.nombre||"").toLowerCase().includes(busq) ||
+      (p.codigo||"").toLowerCase().includes(busq)
+    );
+
+    // Ordenar
+    lista = [...lista].sort((a, b) => {
+      let va = a[campoOrden] ?? "";
+      let vb = b[campoOrden] ?? "";
+      if(typeof va === "string") va = va.toLowerCase();
+      if(typeof vb === "string") vb = vb.toLowerCase();
+      if(va < vb) return dirOrden === "asc" ? -1 : 1;
+      if(va > vb) return dirOrden === "asc" ?  1 : -1;
+      return 0;
+    });
+
+    renderTabla(lista);
+
+    const total = todosLosProductos.length;
+    const activos = todosLosProductos.filter(p=>p.activo!==false).length;
+    document.getElementById("badge-count").textContent = `${lista.length} de ${total}`;
+    document.getElementById("resumen-text").textContent =
+      `${total} productos · ${activos} activos · ${total-activos} inactivos`;
+    document.getElementById("footer-count").textContent =
+      `${lista.length} productos mostrados`;
+  }
+
+  function ordenarPor(campo){
+    if(campoOrden === campo){
+      dirOrden = dirOrden === "asc" ? "desc" : "asc";
+    } else {
+      campoOrden = campo;
+      dirOrden   = "asc";
+    }
+    // Actualizar headers
+    document.querySelectorAll("thead th").forEach(th => th.classList.remove("activo"));
+    const thActivo = document.getElementById("th-"+campo);
+    if(thActivo){
+      thActivo.classList.add("activo");
+      thActivo.querySelector(".sort-icon").textContent = dirOrden === "asc" ? "↑" : "↓";
+    }
+    filtrar();
+  }
+
+  function fmt(n){
+    return new Intl.NumberFormat("es-AR",{style:"currency",currency:"ARS",maximumFractionDigits:0}).format(n||0);
+  }
+  function estadoStock(p){
+    if((p.stock||0) === 0) return "agotado";
+    if((p.stock||0) <= (p.stock_min||0)) return "bajo";
+    return "ok";
+  }
+
+  function renderTabla(lista){
+    const tbody = document.getElementById("tabla-body");
+    if(lista.length === 0){
+      tbody.innerHTML = `<tr><td colspan="5" class="empty">No se encontraron productos con los filtros aplicados.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = lista.map(p => {
+      const est = estadoStock(p);
+      const stockClass = est === "ok" ? "stock-ok" : est === "bajo" ? "stock-bajo" : "stock-agotado";
+      const inactivo = p.activo === false;
+
+      return `<tr class="${inactivo ? 'inactivo' : ''}">
+        <td class="td-codigo">${p.codigo || "—"}</td>
+        <td class="td-nombre">
+          ${p.nombre || ""}
+          ${inactivo ? '<span class="inactivo-badge">inactivo</span>' : ''}
+          ${p.marca ? `<span>${p.marca}</span>` : ''}
+        </td>
+        <td><span class="cat-badge">${p.categoria || "—"}</span></td>
+        <td class="td-stock">
+          <span class="stock-badge ${stockClass}">${p.stock ?? 0}</span>
+        </td>
+        <td class="td-precio">${fmt(p.precio_min)}</td>
+      </tr>`;
+    }).join("");
+  }
+
+  // Si ya está autenticado, cargar datos
+  if(sessionStorage.getItem("catalogo_auth")==="1"){
+    cargarProductos();
+  }
+</script>
+</body>
+</html>
